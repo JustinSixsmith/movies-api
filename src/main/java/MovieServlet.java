@@ -97,7 +97,6 @@ public class MovieServlet extends HttpServlet {
         String[] uriParts = req.getRequestURI().split("/");
         int targetId = Integer.parseInt(uriParts[uriParts.length - 1]);
 
-
         movies.removeIf( movie -> movie.getId() == targetId);
 
             try {
