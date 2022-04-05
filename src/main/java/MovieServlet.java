@@ -50,7 +50,7 @@ public class MovieServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String [] uriParts = req.getRequestURI().split("/");
+        String[] uriParts = req.getRequestURI().split("/");
         int targetId = Integer.parseInt(uriParts[uriParts.length - 1]);
         Movie newMovie = new Gson().fromJson(req.getReader(), Movie.class);
 
@@ -91,4 +91,25 @@ public class MovieServlet extends HttpServlet {
         }
     }
 
-}
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String[] uriParts = req.getRequestURI().split("/");
+        int targetId = Integer.parseInt(uriParts[uriParts.length - 1]);
+
+
+        movies.removeIf( movie -> movie.getId() == targetId);
+
+            try {
+                PrintWriter out = resp.getWriter();
+                out.println("Movie deleted");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+    }
+
+
+
