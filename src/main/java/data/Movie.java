@@ -3,9 +3,9 @@ package data;
 public class Movie {
     // Movie fields
     private String title;
-    private double rating;
+    private Double rating;
     private String poster;
-    private int year;
+    private Integer year;
     private String genre;
     private String director;
     private String plot;
@@ -30,6 +30,21 @@ public class Movie {
     }
 
 
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "title='" + title + '\'' +
+                ", rating=" + rating +
+                ", poster='" + poster + '\'' +
+                ", year=" + year +
+                ", genre='" + genre + '\'' +
+                ", director='" + director + '\'' +
+                ", plot='" + plot + '\'' +
+                ", actors='" + actors + '\'' +
+                ", id=" + id +
+                '}';
+    }
+
     // Getters and setters
     public String getTitle() {
         return title;
@@ -39,11 +54,11 @@ public class Movie {
         this.title = title;
     }
 
-    public double getRating() {
+    public Double getRating() {
         return rating;
     }
 
-    public void setRating(double rating) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 
@@ -55,11 +70,11 @@ public class Movie {
         this.poster = poster;
     }
 
-    public int getYear() {
+    public Integer getYear() {
         return year;
     }
 
-    public void setYear(int year) {
+    public void setYear(Integer year) {
         this.year = year;
     }
 
