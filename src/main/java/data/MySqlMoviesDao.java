@@ -31,7 +31,7 @@ public class MySqlMoviesDao implements MoviesDao {
         // make a statement (don't need a prepared statement since not using any variables from end user)
         PreparedStatement st = connection.prepareStatement("select * from movies");
 
-        // get resultset from user
+        // get result set from user
         ResultSet rs = st.executeQuery();
 
         // iterate over the result set
@@ -48,7 +48,7 @@ public class MySqlMoviesDao implements MoviesDao {
             movie.setPlot(rs.getString("plot"));
             movie.setActors(rs.getString("actors"));
 
-            // and add that object to the arraylist of movies
+            // add that object to the arraylist of movies
             movies.add(movie);
         }
 
@@ -67,12 +67,43 @@ public class MySqlMoviesDao implements MoviesDao {
     @Override
     public void insert(Movie movie) {
 
+        try {
+            // make a prepared statement
+            PreparedStatement ps = connection.prepareStatement("insert into movies (title, rating, poster, year, genre, director, plot, actors) " + "values (?, ?, ?, ?, ?, ?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
+
+            // set all of the user data into the statement
+            ps.setString(1, movie.getTitle());
+            ps.setDouble(2, movie.getRating());
+            ps.setString(3, movie.getPoster());
+            ps.setInt(4, movie.getYear());
+            ps.setString(5, movie.getGenre());
+            ps.setString(6, movie.getDirector());
+            ps.setString(7, movie.getPlot());
+            ps.setString(8, movie.getActors());
+
+            // execute the query
+            ps.executeUpdate();
+
+            ResultSet keys = ps.getGeneratedKeys();
+            keys.next();
+            int newId = keys.getInt(0);
+
+            ps.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void insertAll(Movie[] movies) throws SQLException {
 
+    public void insertAll(Movie[] movies) throws SQLException {
+        // iterate over the given movies
+        for (Movie movie : movies) {
+            // call insert() for each of the movies
+            insert(movie);
+        }
     }
+
 
     @Override
     public void update(Movie movie) throws SQLException {
@@ -82,5 +113,13 @@ public class MySqlMoviesDao implements MoviesDao {
     @Override
     public void delete(int id) throws SQLException {
 
+    }
+
+    public void cleanUp() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -76,4 +76,8 @@ public class MovieServlet extends HttpServlet {
             }
         }
 
+        @Override
+    public void destroy() {
+        dao.cleanUp();
+        }
     }
