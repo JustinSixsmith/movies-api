@@ -104,16 +104,98 @@ public class MySqlMoviesDao implements MoviesDao {
         }
     }
 
-
     @Override
     public void update(Movie movie) throws SQLException {
+// assumption: movie only has the fields that we need to update
+//        "update movies set field1  = value1, field2 = value 2, etc. where id = xxx"
+//                "update "
+        String query = "update movies set ";
+        if (movie.getTitle() != null) {
+            query += " title = ?,";
+        }
+        if (movie.getRating() != null) {
+            query += " rating = ?,";
+        }
+        if (movie.getPoster() != null) {
+            query += " poster = ?,";
+        }
+        if (movie.getYear() != null) {
+            query += " year = ?,";
+        }
+        if (movie.getGenre() != null) {
+            query += " genre = ?,";
+        }
+        if (movie.getDirector() != null) {
+            query += " director = ?,";
+        }
+        if (movie.getPlot() != null) {
+            query += " plot = ?,";
+        }
+        if (movie.getActors() != null) {
+            query += " actors = ?,";
+        }
+        // get rid of trailing comma
+        query = query.substring(0, query.length() - 1);
+        query += " where id = ? ";
 
+        // create prepared statement from the query string
+        PreparedStatement ps = connection.prepareStatement(query);
+
+        // set parameters on the query based on the field that needs to be updated
+        int currentIndex = 1;
+        if (movie.getTitle() != null) {
+            ps.setString(currentIndex, movie.getTitle());
+            currentIndex++;
+        }
+        if (movie.getRating() != null) {
+            ps.setDouble(currentIndex, movie.getRating());
+            currentIndex++;
+        }
+        if (movie.getPoster() != null) {
+            ps.setString(currentIndex, movie.getPoster());
+            currentIndex++;
+        }
+        if (movie.getYear() != null) {
+            ps.setInt(currentIndex, movie.getYear());
+            currentIndex++;
+        }
+        if (movie.getGenre() != null) {
+            ps.setString(currentIndex, movie.getGenre());
+            currentIndex++;
+        }
+        if (movie.getDirector() != null) {
+            ps.setString(currentIndex, movie.getDirector());
+            currentIndex++;
+        }
+        if (movie.getPlot() != null) {
+            ps.setString(currentIndex, movie.getPlot());
+            currentIndex++;
+        }
+        if (movie.getActors() != null) {
+            ps.setString(currentIndex, movie.getActors());
+            currentIndex++;
+        }
+        ps.setInt(currentIndex, movie.getId());
+
+        // execute it!
+        ps.executeUpdate();
     }
 
     @Override
     public void delete(int id) throws SQLException {
 
     }
+
+
+    public boolean isNumeric(String aString) {
+        try {
+            double d = Double.parseDouble(aString);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
 
     public void cleanUp() {
         try {
