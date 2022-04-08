@@ -82,7 +82,7 @@ public class MoviesJDBCTest {
         // can rig up a manual counter if we want
 //        int rowCount = 0;
         while (movieRows.next()) { // for each row in the resultSet
-            rowCount++;
+//            rowCount++;
             // make a movie object from that row
             Movie movie = new Movie();
             movie.setTitle(movieRows.getString("title"));
