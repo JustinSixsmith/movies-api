@@ -1,9 +1,11 @@
+package main;
+
 import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.WebServlet;
 
-@WebServlet(name = "HelloWorldServlet", urlPatterns = "/hello-world")
+@WebServlet(name = "main.HelloWorldServlet", urlPatterns = "/hello-world")
 public class HelloWorldServlet extends HttpServlet {
 
     @Override

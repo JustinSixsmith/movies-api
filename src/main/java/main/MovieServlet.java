@@ -1,6 +1,9 @@
+package main;
+
 import com.google.gson.Gson;
 import data.InMemoryMoviesDao;
 import data.Movie;
+import data.MySqlMoviesDao;
 
 import java.io.*;
 import java.sql.SQLException;
@@ -8,11 +11,11 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.WebServlet;
 
-@WebServlet(name = "MovieServlet", urlPatterns = "/movies/*")
+@WebServlet(name = "main.MovieServlet", urlPatterns = "/movies/*")
 public class MovieServlet extends HttpServlet {
 
-    InMemoryMoviesDao dao = new InMemoryMoviesDao();
-
+//    InMemoryMoviesDao dao = new InMemoryMoviesDao();
+    MySqlMoviesDao dao = new MySqlMoviesDao();
 
 
     @Override
@@ -28,7 +31,6 @@ public class MovieServlet extends HttpServlet {
         }
     }
 
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json");
@@ -43,7 +45,6 @@ public class MovieServlet extends HttpServlet {
             e.printStackTrace();
         }
     }
-
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -61,7 +62,6 @@ public class MovieServlet extends HttpServlet {
         }
     }
 
-
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String[] uriParts = req.getRequestURI().split("/");
@@ -76,8 +76,4 @@ public class MovieServlet extends HttpServlet {
             }
         }
 
-
     }
-
-
-
