@@ -61,7 +61,36 @@ public class MySqlMoviesDao implements MoviesDao {
 
     @Override
     public Movie findOne(int id) {
-        return null;
+// make a statement (don't need a prepared statement since not using any variables from end user)
+        Movie movie = null;
+        try {
+            PreparedStatement st = connection.prepareStatement("select * from movies where id = ?");
+            st.setInt(1, id);
+
+            // get result set from user
+            ResultSet rs = st.executeQuery();
+
+            // move rs to the first record before grabbing col values
+            rs.next();
+                // and make movie object for each row
+                movie = new Movie();
+                movie.setId(rs.getInt("id"));
+                movie.setTitle(rs.getString("title"));
+                movie.setRating(rs.getDouble("rating"));
+                movie.setPoster(rs.getString("poster"));
+                movie.setYear(rs.getInt("year"));
+                movie.setGenre(rs.getString("genre"));
+                movie.setDirector(rs.getString("director"));
+                movie.setPlot(rs.getString("plot"));
+                movie.setActors(rs.getString("actors"));
+
+            rs.close();
+            st.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return movie;
     }
 
     @Override
@@ -105,33 +134,34 @@ public class MySqlMoviesDao implements MoviesDao {
     }
 
     @Override
-    public void update(Movie movie) throws SQLException {
+    public void update(Movie movieToChange) throws SQLException {
+
 // assumption: movie only has the fields that we need to update
 //        "update movies set field1  = value1, field2 = value 2, etc. where id = xxx"
 //                "update "
         String query = "update movies set ";
-        if (movie.getTitle() != null) {
+        if (movieToChange.getTitle() != null) {
             query += " title = ?,";
         }
-        if (movie.getRating() != null) {
+        if (movieToChange.getRating() != null) {
             query += " rating = ?,";
         }
-        if (movie.getPoster() != null) {
+        if (movieToChange.getPoster() != null) {
             query += " poster = ?,";
         }
-        if (movie.getYear() != null) {
+        if (movieToChange.getYear() != null) {
             query += " year = ?,";
         }
-        if (movie.getGenre() != null) {
+        if (movieToChange.getGenre() != null) {
             query += " genre = ?,";
         }
-        if (movie.getDirector() != null) {
+        if (movieToChange.getDirector() != null) {
             query += " director = ?,";
         }
-        if (movie.getPlot() != null) {
+        if (movieToChange.getPlot() != null) {
             query += " plot = ?,";
         }
-        if (movie.getActors() != null) {
+        if (movieToChange.getActors() != null) {
             query += " actors = ?,";
         }
         // get rid of trailing comma
@@ -143,39 +173,39 @@ public class MySqlMoviesDao implements MoviesDao {
 
         // set parameters on the query based on the field that needs to be updated
         int currentIndex = 1;
-        if (movie.getTitle() != null) {
-            ps.setString(currentIndex, movie.getTitle());
+        if (movieToChange.getTitle() != null) {
+            ps.setString(currentIndex, movieToChange.getTitle());
             currentIndex++;
         }
-        if (movie.getRating() != null) {
-            ps.setDouble(currentIndex, movie.getRating());
+        if (movieToChange.getRating() != null) {
+            ps.setDouble(currentIndex, movieToChange.getRating());
             currentIndex++;
         }
-        if (movie.getPoster() != null) {
-            ps.setString(currentIndex, movie.getPoster());
+        if (movieToChange.getPoster() != null) {
+            ps.setString(currentIndex, movieToChange.getPoster());
             currentIndex++;
         }
-        if (movie.getYear() != null) {
-            ps.setInt(currentIndex, movie.getYear());
+        if (movieToChange.getYear() != null) {
+            ps.setInt(currentIndex, movieToChange.getYear());
             currentIndex++;
         }
-        if (movie.getGenre() != null) {
-            ps.setString(currentIndex, movie.getGenre());
+        if (movieToChange.getGenre() != null) {
+            ps.setString(currentIndex, movieToChange.getGenre());
             currentIndex++;
         }
-        if (movie.getDirector() != null) {
-            ps.setString(currentIndex, movie.getDirector());
+        if (movieToChange.getDirector() != null) {
+            ps.setString(currentIndex, movieToChange.getDirector());
             currentIndex++;
         }
-        if (movie.getPlot() != null) {
-            ps.setString(currentIndex, movie.getPlot());
+        if (movieToChange.getPlot() != null) {
+            ps.setString(currentIndex, movieToChange.getPlot());
             currentIndex++;
         }
-        if (movie.getActors() != null) {
-            ps.setString(currentIndex, movie.getActors());
+        if (movieToChange.getActors() != null) {
+            ps.setString(currentIndex, movieToChange.getActors());
             currentIndex++;
         }
-        ps.setInt(currentIndex, movie.getId());
+        ps.setInt(currentIndex, movieToChange.getId());
 
         // execute it!
         ps.executeUpdate();
@@ -183,17 +213,18 @@ public class MySqlMoviesDao implements MoviesDao {
 
     @Override
     public void delete(int id) throws SQLException {
+        // test the findOne method
+        Movie movieToDelete = findOne(id);
+        System.out.println(movieToDelete);
 
-    }
+        // Make a prepared statement and assemble the query
+        PreparedStatement ps = connection.prepareStatement("delete from movies where id = ?");
 
+        // Set parameters for the statement
+        ps.setInt(1, id);
 
-    public boolean isNumeric(String aString) {
-        try {
-            double d = Double.parseDouble(aString);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
+        // Execute statement
+        ps.executeUpdate();
     }
 
 

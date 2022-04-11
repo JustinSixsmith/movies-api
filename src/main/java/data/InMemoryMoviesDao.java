@@ -57,6 +57,10 @@ public class InMemoryMoviesDao implements MoviesDao {
         }
     }
 
+    @Override
+    public void cleanUp() {
+    }
+
 //    private HashMap<Integer, Movie> getMoviesMap() {
 //        try {
 //            Reader reader = Files.newBufferedReader(Paths.get("/Users/vegetasrevenge/IdeaProjects/movies-backend/src/main/resources/movies.json"));
